@@ -11,15 +11,19 @@ export class AuthGuard implements CanActivate {
     const headers = {
       headers: {
         authorizationJwt: authorizationToken,
+        "client-id": request.headers["client-id"] ,
+        "client-saas-secret":  request.headers["client-saas-secret"]
       },
     };
+    
     const url =
       'http://localhost:4000/access' + '?' + 'planToCheck=' + this.plan;
-    console.log(url);
 
-    resp = await axios.get(url, headers).catch((e) => {
-      return e.data;
-    });
+      
+      resp = await axios.get(url, headers).catch((e) => {
+        return e.data;
+      });
+      console.log('url');
 
     if (resp === undefined || !resp.data) return false;
     else return true;

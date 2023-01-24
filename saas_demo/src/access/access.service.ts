@@ -1,7 +1,8 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import axios from 'axios';
-import * as CryptoJS from 'crypto-js';
+import * as crypto from 'crypto';
+import { share } from 'rxjs';
 
 
 @Injectable()
@@ -16,27 +17,27 @@ export class AccessService {
     };
 
     const body = {
-      client_id: 'saas-demo',
-      client_secret: 'yOUjr4bRjjDrakKrCpO74IWX5DT348Jf',
+      client_id: 'saas-app-demo',
+      client_secret: '12iu7uig7MhbXJfQZFCVF8683RqkBW7R',
       token: authorizationToken,
     };
 
     return await axios
       .post(
-        'http://localhost:8080/realms/demo-realm/protocol/openid-connect/token/introspect',
+        'http://localhost:8080/realms/saas-client-demo/protocol/openid-connect/token/introspect',
         body,
         headers,
       )
       .then((data: any) => {
         console.log(
           data.data.active &&
-            data.data.resource_access['saas-demo'].roles.includes(planToCheck),
+            data.data.resource_access['saas-app-demo'].roles.includes(planToCheck),
         );
 
         return (
           data.data.active &&
           data.data.resource_access !== undefined &&
-          data.data.resource_access['saas-demo'].roles.includes(planToCheck)
+          data.data.resource_access['saas-app-demo'].roles.includes(planToCheck)
         );
       })
       .catch((err) => {
@@ -47,13 +48,16 @@ export class AccessService {
 
   encryptWithAES = (text) => {
     const passphrase = '123';
-    return CryptoJS.AES.encrypt(text, passphrase).toString();
+    const hash = crypto.createHmac('sha256', passphrase)
+    .update(text)
+    .digest('hex');
+    return hash;
   };
 
   decryptWithAES = (ciphertext) => {
-    const passphrase = '123';
-    const bytes = CryptoJS.AES.decrypt(ciphertext, passphrase);
-    const originalText = bytes.toString(CryptoJS.enc.Utf8);
-    return originalText;
+    // const passphrase = '123';
+    // const bytes = CryptoJS.AES.decrypt(ciphertext, passphrase);
+    // const originalText = bytes.toString(CryptoJS.enc.Utf8);
+    // return originalText;
   };
 }

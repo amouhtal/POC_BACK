@@ -32,32 +32,14 @@ export function fillDb(): Data[] {
 class ProtectRoutes {
   db: Data[];
 
-  constructor(private accessService: AccessService) {
-    this.db = DATA_BASE;
-  }
+  constructor(private accessService: AccessService) {}
 
-  insertData(data: Data): void {
-    this.db.push(data);
-  }
+  checkClient(clientId: string, secret: string) {
+    console.log(this.accessService.encryptWithAES(secret), secret);
 
-  getData(): Data[] {
-    return this.db;
-  }
-
-  checkClient(clientId: string, clientKeycloakSecret: string, secret: string) {
-    let exist: boolean = false;
-
-    this.db.forEach((data) => { 
-      if (
-        data.clientId === clientId &&
-        data.clientKeycloakSecret === clientKeycloakSecret &&
-        this.accessService.decryptWithAES(data.clientSaasSecret) === secret
-      ) {
-        exist = true;
-      }
-    });
-
-    return exist;
+    return DATA_BASE.some((data) => 
+      data.clientId === clientId && secret === data.clientSaasSecret
+    );
   }
 }
 
@@ -70,11 +52,15 @@ export class GuardProtector implements CanActivate {
   }
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
+    console.log(request.headers);
 
-    return this.protector.checkClient(
-      request.body.clientId,
-      request.body.clientKeycloakSecret,
-      request.body.clientSaasSecret,
+    let ret = this.protector.checkClient(
+      request.headers['client-id'],
+      request.headers['client-saas-secret'],
     );
+
+    console.log(ret);
+
+    return ret;
   }
 }

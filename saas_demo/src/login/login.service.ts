@@ -7,10 +7,12 @@ import axios from 'axios';
 export class LoginService {
   constructor(private readonly httpService: HttpService) {}
   data: any;
-  async login(user: loginDto, ): Promise<any> {
+  async login(user: loginDto): Promise<any> {
+    console.log(user);
+    
     await axios
       .post(
-        'http://localhost:8080/realms/demo-realm/protocol/openid-connect/token',
+        'http://localhost:8080/realms/saas-client-demo/protocol/openid-connect/token',
         user,
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } },
       )
