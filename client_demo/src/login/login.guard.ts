@@ -1,12 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import axios from 'axios';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private plan: string) {
-
-  }
+  constructor(private plan: string) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const authorizationToken = request.headers.authorization.split(' ')[1];
@@ -17,10 +14,7 @@ export class AuthGuard implements CanActivate {
       },
     };
     const url =
-      'http://localhost:4000/access' +
-      '?' +
-      'planToCheck=' +
-      this.plan;
+      'http://localhost:4000/access' + '?' + 'planToCheck=' + this.plan;
     console.log(url);
 
     resp = await axios.get(url, headers).catch((e) => {

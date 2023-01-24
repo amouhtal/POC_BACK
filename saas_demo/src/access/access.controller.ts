@@ -20,7 +20,7 @@ export class loginDto {
 export interface Data {
   id: number;
   clientId: string;
-  clientKeyckloakSecret: string;
+  clientKeycloakSecret: string;
   clientSaasSecret: string;
 }
 
@@ -51,7 +51,7 @@ export class AcessController {
       id: DATA_BASE.length,
       clientId: body.clientid,
       clientSaasSecret: cryptedSecret,
-      clientKeyckloakSecret: body.clientkeycloacksecret,
+      clientKeycloakSecret: body.clientkeycloacksecret,
     });
   }
 }
