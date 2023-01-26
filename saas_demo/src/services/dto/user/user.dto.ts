@@ -1,5 +1,14 @@
-export class userDTO {
-  userName: string;
+import { AutoMap } from "@automapper/classes";
+
+export class UserLoginDTO {
+  @AutoMap()
+  username: string;
+  @AutoMap()
   password: string;
-  phone: string;
+  @AutoMap()
+  client_id: string;
+  @AutoMap()
+  grant_type: string;
+  @AutoMap()
+  client_secret: string;
 }

@@ -1,17 +1,29 @@
 import { AutoMap } from '@automapper/classes';
-import { IsNotEmpty } from 'class-validator';
 
-export class UserLoginWo {
-  userName: string;
-  email: string;
+export class UserLoginWO {
+  @AutoMap()
+  username: string;
+  @AutoMap()
   password: string;
+  @AutoMap()
+  client_id: string;
+  @AutoMap()
+  grant_type: string;
+  @AutoMap()
+  client_secret: string;
 }
 
-export class UserSignUpWo {
+export class UserSignUpWO {
+  @AutoMap()
   userName: string;
+  @AutoMap()
   password: string;
+  @AutoMap()
   phone: string;
-  //   clientId: string;
-  //   grantType: string;
-  //   clientSecret: string;
+  @AutoMap()
+  secret: string;
+  @AutoMap()
+  clientid: string;
+  @AutoMap()
+  clientkeycloacksecret: string;
 }

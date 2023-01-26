@@ -4,7 +4,6 @@ import axios from 'axios';
 import * as crypto from 'crypto';
 import { share } from 'rxjs';
 
-
 @Injectable()
 export class AccessService {
   constructor(private readonly jwtService: JwtService) {}
@@ -31,7 +30,9 @@ export class AccessService {
       .then((data: any) => {
         console.log(
           data.data.active &&
-            data.data.resource_access['saas-app-demo'].roles.includes(planToCheck),
+            data.data.resource_access['saas-app-demo'].roles.includes(
+              planToCheck,
+            ),
         );
 
         return (
@@ -48,9 +49,10 @@ export class AccessService {
 
   encryptWithAES = (text) => {
     const passphrase = '123';
-    const hash = crypto.createHmac('sha256', passphrase)
-    .update(text)
-    .digest('hex');
+    const hash = crypto
+      .createHmac('sha256', passphrase)
+      .update(text)
+      .digest('hex');
     return hash;
   };
 

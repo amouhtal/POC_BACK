@@ -1,9 +1,13 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
-import axios from 'axios';
-import { Data, DATA_BASE } from './access.controller';
-import { AccessService } from './access.service';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
-export function fillDb(): Data[] {
+export interface Data {
+  id: number;
+  clientId: string;
+  clientKeycloakSecret: string;
+  clientSaasSecret: string;
+}
+
+function fillDb(): Data[] {
   let data: Data[] = [];
 
   data.push({
@@ -29,32 +33,28 @@ export function fillDb(): Data[] {
   return data;
 }
 
-class ProtectRoutes {
-  db: Data[];
+export let DATA_BASE: Data[] = fillDb();
 
-  constructor(private accessService: AccessService) {}
+function checkClient(clientId: string, secret: string) {
+  console.log(this.accessService.encryptWithAES(secret), secret);
 
-  checkClient(clientId: string, secret: string) {
-    console.log(this.accessService.encryptWithAES(secret), secret);
-
-    return DATA_BASE.some(
-      (data) => data.clientId === clientId && secret === data.clientSaasSecret,
-    );
-  }
+  return DATA_BASE.some(
+    (data) => data.clientId === clientId && secret === data.clientSaasSecret,
+  );
 }
 
 @Injectable()
 export class GuardProtector implements CanActivate {
-  protector: ProtectRoutes;
+  //   protector: ProtectRoutes;
 
-  constructor(private accessService: AccessService) {
-    this.protector = new ProtectRoutes(accessService);
+  constructor() {
+    // this.protector = new ProtectRoutes(accessService);
   }
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     console.log(request.headers);
 
-    let ret = this.protector.checkClient(
+    let ret = checkClient(
       request.headers['client-id'],
       request.headers['client-saas-secret'],
     );
