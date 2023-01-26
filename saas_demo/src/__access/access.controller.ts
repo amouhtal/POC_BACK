@@ -33,7 +33,6 @@ export class AcessController {
   @Get('access')
   @UseGuards(GuardProtector)
   async deco(@Headers() headers, @Query() query) {
-    
     return this.accessService.checkeycloackAccess(
       headers.authorizationjwt,
       query.planToCheck,
@@ -48,7 +47,7 @@ export class AcessController {
   @Get('sign-up')
   createClients(@Body() body) {
     const cryptedSecret = this.accessService.encryptWithAES(body.secret); // return saas secret
-    
+
     DATA_BASE.push({
       id: DATA_BASE.length,
       clientId: body.clientid,
